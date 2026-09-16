@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>U1 U2 Đề 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-primary: #4F46E5;
+  --color-secondary: #06B6D4;
+  --color-accent: #F59E0B;
+  --color-bg: #F8FAFC;
+  --color-card: #FFFFFF;
+  --color-correct: #22C55E;
+  --color-wrong: #EF4444;
+  --color-selecting: #2563EB;
+  --color-pending: #FEF3C7;
+  --color-pending-text: #92400E;
+}
+
+body {
+  font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+  background-color: var(--color-bg);
+  background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px);
+  background-size: 20px 20px;
+  margin: 0;
+  padding: 20px;
+  color: #1e293b;
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.student-info {
+  max-width: 800px;
+  margin: 0 auto 20px auto;
+  background: var(--color-card);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.student-info input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.progress-bar-container {
+  max-width: 800px;
+  margin: 0 auto 20px auto;
+  background: #e2e8f0;
+  border-radius: 8px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: var(--color-primary);
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s;
+}
+
+.progress-text {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: var(--color-card);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  max-width: 800px;
+  margin: 0 auto 20px auto;
+  padding: 20px;
+}
+
+.question {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 14px 20px;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.6;
+  cursor: pointer;
+  transition: all 0.2s;
+  overflow-wrap: break-word;
+  min-height: 52px;
+  box-sizing: border-box;
+}
+
+.option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.option.pending {
+  background-color: var(--color-pending);
+  color: var(--color-pending-text);
+  border-color: var(--color-selecting);
+  transform: scale(1.02);
+}
+
+.option.correct {
+  background-color: var(--color-correct);
+  color: #fff;
+  border-color: var(--color-correct);
+}
+
+.option.wrong {
+  background-color: var(--color-wrong);
+  color: #fff;
+  border-color: var(--color-wrong);
+  animation: shake 0.1s ease-in-out 2;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.option-label {
+  font-weight: 700;
+  margin-right: 12px;
+  min-width: 24px;
+}
+
+.check-btn, .submit-btn {
+  width: 100%;
+  max-width: 400px;
+  margin: 30px auto;
+  display: block;
+  padding: 15px 40px;
+  font-size: 20px;
+  font-weight: 700;
+  background: var(--color-correct);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(34,197,94,0.3);
+  font-family: inherit;
+}
+
+
+.check-btn:disabled, 
+
+.explanation {
+  display: none;
+  margin-top: 20px;
+  padding: 16px;
+  background: #e0f2fe;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.8;
+  color: #0369a1;
+}
+
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 30px;
+  background: var(--color-card);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.summary-table th, .summary-table td {
+  border: 1px solid #E2E8F0;
+  padding: 8px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.summary-table .correct-cell { background-color: var(--color-correct); color: #fff; }
+.summary-table .wrong-cell { background-color: var(--color-wrong); color: #fff; }
+.summary-table .neutral-cell { background-color: #F1F5F9; color: #64748b; }
+.summary-table .empty-cell { background-color: var(--color-wrong); color: #fff; }
+
+.hidden { display: none !important; }
+
+@media (max-width: 600px) {
+  h1 { font-size: 20px; }
+  .question { font-size: 20px; }
+  .option { font-size: 17px; }
+  .explanation { font-size: 16px; }
+  .check-btn, .submit-btn {
+  width: 100%;
+  max-width: 400px;
+  margin: 30px auto;
+  display: block;
+  padding: 15px 40px;
+  font-size: 20px;
+  font-weight: 700;
+  background: var(--color-correct);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(34,197,94,0.3);
+  font-family: inherit;
+}
+
+  .summary-table th, .summary-table td { font-size: 13px; padding: 4px; }
+}
+</style>
+</head>
+<body>
+
+<h1>U1 U2 Đề 2 (MCQs + gap fill câu 1 - 31)</h1>
+
+<div class="student-info">
+  <input type="text" id="studentName" placeholder="Nhập tên học sinh (bắt buộc)">
+</div>
+
+<div class="progress-text">Đã chọn: <span id="progress-count">0</span> / <span id="total-count">32</span></div>
+<div class="progress-bar-container">
+  <div class="progress-bar" id="progress-bar"></div>
+</div>
+
+<div id="quiz-container"></div>
+
+<div style="max-width: 800px; margin: 0 auto;">
+  <button class="submit-btn" id="submit-btn">Nộp bài</button>
+</div>
+
+<div id="summary-container" style="display: none; padding-bottom: 50px;">
+  <h2 style="text-align:center;">Bảng tổng kết</h2>
+  <div id="summary-tables"></div>
+</div>
+
+<script>
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playTone(freq1, dur1, freq2 = null, dur2 = null, type = 'sine', volume = 0.1) {
+  try {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    
+    osc.type = type;
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    osc.frequency.setValueAtTime(freq1, audioCtx.currentTime);
+    gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
+    
+    if (freq2 && dur2) {
+      osc.frequency.setValueAtTime(freq2, audioCtx.currentTime + dur1);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur1 + dur2);
+      osc.start(audioCtx.currentTime);
+      osc.stop(audioCtx.currentTime + dur1 + dur2);
+    } else {
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur1);
+      osc.start(audioCtx.currentTime);
+      osc.stop(audioCtx.currentTime + dur1);
+    }
+  } catch (e) {}
+}
+
+function playSelectSound() { playTone(600, 0.08, null, null, 'sine', 0.15); }
+function playCorrectSound() { playTone(800, 0.1, 1200, 0.15, 'sine', 0.2); }
+function playWrongSound() { playTone(150, 0.2, null, null, 'square', 0.12); }
+
+const quizData = [
+  {
+    id: 1, type: "vocab",
+    questionHTML: "1. A long journey, especially by sea or in space, is called a ______.",
+    options: [
+      { label: "A", html: "trip", isCorrect: false },
+      { label: "B", html: "voyage", isCorrect: true },
+      { label: "C", html: "excursion", isCorrect: false },
+      { label: "D", html: "fare", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. trip (n):</b> Chuyến đi ngắn<br><b>B. voyage (n):</b> Chuyến hành trình dài (thường bằng đường biển/không gian)<br><b>C. excursion (n):</b> Chuyến tham quan, dã ngoại<br><b>D. fare (n):</b> Tiền xe, tiền vé<br>Dịch: Một chuyến đi dài, đặc biệt là bằng đường biển hoặc trong không gian, được gọi là voyage.<br>Đáp án B đúng vì phù hợp ngữ nghĩa."
+  },
+  {
+    id: 2, type: "vocab",
+    questionHTML: "2. We went on a short ______ to a nearby island and returned before dinner.",
+    options: [
+      { label: "A", html: "excursion", isCorrect: true },
+      { label: "B", html: "border", isCorrect: false },
+      { label: "C", html: "journey", isCorrect: false },
+      { label: "D", html: "fee", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. excursion (n):</b> Chuyến tham quan ngắn, dã ngoại<br><b>B. border (n):</b> Biên giới<br><b>C. journey (n):</b> Chuyến đi<br><b>D. fee (n):</b> Lệ phí<br>Dịch: Chúng tôi đã đi một chuyến tham quan ngắn tới hòn đảo gần đó và quay về trước bữa tối.<br>Đáp án A đúng ngữ cảnh 'short excursion'."
+  },
+  {
+    id: 3, type: "vocab",
+    questionHTML: "3. The mountain ______ from our hotel room was breathtaking.",
+    options: [
+      { label: "A", html: "sight", isCorrect: false },
+      { label: "B", html: "view", isCorrect: true },
+      { label: "C", html: "fare", isCorrect: false },
+      { label: "D", html: "line", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. sight (n):</b> Cảnh tượng, thị lực<br><b>B. view (n):</b> Cảnh quan, tầm nhìn (từ một vị trí)<br><b>C. fare (n):</b> Giá vé<br><b>D. line (n):</b> Hàng, vạch<br>Dịch: Cảnh núi non từ phòng khách sạn của chúng tôi thật ngoạn mục.<br>Đáp án B đúng với cụm 'mountain view'."
+  },
+  {
+    id: 4, type: "vocab",
+    questionHTML: "4. The Eiffel Tower is one of the most famous tourist ______ in Paris.",
+    options: [
+      { label: "A", html: "views", isCorrect: false },
+      { label: "B", html: "fares", isCorrect: false },
+      { label: "C", html: "sights", isCorrect: true },
+      { label: "D", html: "edges", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. views (n):</b> Tầm nhìn<br><b>B. fares (n):</b> Giá vé<br><b>C. sights (n):</b> Điểm tham quan, thắng cảnh<br><b>D. edges (n):</b> Rìa, mép<br>Dịch: Tháp Eiffel là một trong những điểm tham quan du lịch nổi tiếng nhất ở Paris.<br>Đáp án C đúng với cụm 'tourist sights'."
+  },
+  {
+    id: 5, type: "vocab",
+    questionHTML: "5. The train ______ is £45, including a reserved seat.",
+    options: [
+      { label: "A", html: "fee", isCorrect: false },
+      { label: "B", html: "ticket", isCorrect: false },
+      { label: "C", html: "fare", isCorrect: true },
+      { label: "D", html: "border", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. fee (n):</b> Lệ phí<br><b>B. ticket (n):</b> Vé<br><b>C. fare (n):</b> Tiền vé xe/tàu/máy bay<br><b>D. border (n):</b> Biên giới<br>Dịch: Tiền vé tàu là £45, bao gồm một chỗ ngồi đã đặt trước.<br>Đáp án C đúng vì 'train fare' là tiền vé tàu."
+  },
+  {
+    id: 6, type: "vocab",
+    questionHTML: "6. You need to pay an entrance ______ before entering the museum.",
+    options: [
+      { label: "A", html: "fare", isCorrect: false },
+      { label: "B", html: "fee", isCorrect: true },
+      { label: "C", html: "ticket", isCorrect: false },
+      { label: "D", html: "line", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. fare (n):</b> Tiền vé di chuyển<br><b>B. fee (n):</b> Phí, lệ phí<br><b>C. ticket (n):</b> Vé<br><b>D. line (n):</b> Đường kẻ<br>Dịch: Bạn cần trả phí vào cửa trước khi vào bảo tàng.<br>Đáp án B đúng với cụm 'entrance fee' (phí vào cửa)."
+  },
+  {
+    id: 7, type: "vocab",
+    questionHTML: "7. The river forms the ______ between the two countries.",
+    options: [
+      { label: "A", html: "edge", isCorrect: false },
+      { label: "B", html: "line", isCorrect: false },
+      { label: "C", html: "border", isCorrect: true },
+      { label: "D", html: "route", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. edge (n):</b> Mép, rìa<br><b>B. line (n):</b> Đường kẻ<br><b>C. border (n):</b> Biên giới<br><b>D. route (n):</b> Tuyến đường<br>Dịch: Con sông tạo thành biên giới giữa hai quốc gia.<br>Đáp án C đúng nghĩa biên giới."
+  },
+  {
+    id: 8, type: "vocab",
+    questionHTML: "8. Please don't stand too close to the ______ of the platform.",
+    options: [
+      { label: "A", html: "edge", isCorrect: true },
+      { label: "B", html: "border", isCorrect: false },
+      { label: "C", html: "line", isCorrect: false },
+      { label: "D", html: "direction", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. edge (n):</b> Mép, rìa<br><b>B. border (n):</b> Biên giới<br><b>C. line (n):</b> Hàng, vạch<br><b>D. direction (n):</b> Phương hướng<br>Dịch: Vui lòng không đứng quá gần mép sân ga.<br>Đáp án A đúng với 'edge of the platform' (mép sân ga)."
+  },
+  {
+    id: 9, type: "vocab",
+    questionHTML: "9. We were late, but we managed to ______ the rest of the group.",
+    options: [
+      { label: "A", html: "check in", isCorrect: false },
+      { label: "B", html: "catch up with", isCorrect: true },
+      { label: "C", html: "see off", isCorrect: false },
+      { label: "D", html: "pull in", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. check in (v):</b> Làm thủ tục nhận phòng/vé<br><b>B. catch up with (v):</b> Bắt kịp với<br><b>C. see off (v):</b> Tiễn ai đó<br><b>D. pull in (v):</b> (Xe) tấp vào lề<br>Dịch: Chúng tôi đã đến trễ, nhưng chúng tôi đã xoay sở để bắt kịp với phần còn lại của nhóm.<br>Đáp án B đúng nghĩa bắt kịp."
+  },
+  {
+    id: 10, type: "vocab",
+    questionHTML: "10. We arrived at the airport two hours early to ______.",
+    options: [
+      { label: "A", html: "check in", isCorrect: true },
+      { label: "B", html: "check out", isCorrect: false },
+      { label: "C", html: "get back", isCorrect: false },
+      { label: "D", html: "drop off", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. check in (v):</b> Làm thủ tục<br><b>B. check out (v):</b> Trả phòng<br><b>C. get back (v):</b> Quay lại<br><b>D. drop off (v):</b> Cho ai xuống xe<br>Dịch: Chúng tôi đến sân bay sớm hai tiếng để làm thủ tục.<br>Đáp án A đúng với ngữ cảnh sân bay."
+  },
+  {
+    id: 11, type: "vocab",
+    questionHTML: "11. We have to ______ of the hotel by 11 a.m.",
+    options: [
+      { label: "A", html: "check in", isCorrect: false },
+      { label: "B", html: "set off", isCorrect: false },
+      { label: "C", html: "check out", isCorrect: true },
+      { label: "D", html: "make for", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. check in (v):</b> Nhận phòng<br><b>B. set off (v):</b> Khởi hành<br><b>C. check out (v):</b> Trả phòng<br><b>D. make for (v):</b> Hướng về phía<br>Dịch: Chúng tôi phải trả phòng khách sạn trước 11 giờ sáng.<br>Đáp án C đúng với ngữ cảnh khách sạn."
+  },
+  {
+    id: 12, type: "vocab",
+    questionHTML: "12. Could you ______ me ______ at the station on your way home?",
+    options: [
+      { label: "A", html: "see / off", isCorrect: false },
+      { label: "B", html: "pick / up", isCorrect: false },
+      { label: "C", html: "pull / in", isCorrect: false },
+      { label: "D", html: "drop / off", isCorrect: true }
+    ],
+    explanationHTML: "<b>A. see off (v):</b> Tiễn<br><b>B. pick up (v):</b> Đón<br><b>C. pull in (v):</b> Tấp vào<br><b>D. drop off (v):</b> Cho ai xuống xe / chở ai tới đâu<br>Dịch: Bạn có thể cho tôi xuống ở nhà ga trên đường bạn về nhà không?<br>Đáp án D đúng nghĩa."
+  },
+  {
+    id: 13, type: "vocab",
+    questionHTML: "13. The bus stopped to ______ an elderly passenger ______ near the hospital.",
+    options: [
+      { label: "A", html: "drop / off", isCorrect: true },
+      { label: "B", html: "see / off", isCorrect: false },
+      { label: "C", html: "catch / up", isCorrect: false },
+      { label: "D", html: "set / out", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. drop off (v):</b> Trả khách / cho ai xuống xe<br><b>B. see off (v):</b> Tiễn<br><b>C. catch up (v):</b> Bắt kịp<br><b>D. set out (v):</b> Khởi hành<br>Dịch: Xe buýt dừng lại để trả một hành khách lớn tuổi ở gần bệnh viện.<br>Đáp án A đúng ngữ cảnh."
+  },
+  {
+    id: 14, type: "vocab",
+    questionHTML: "14. We should ______ now if we want to reach the coast before sunset.",
+    options: [
+      { label: "A", html: "set off", isCorrect: true },
+      { label: "B", html: "check out", isCorrect: false },
+      { label: "C", html: "pull in", isCorrect: false },
+      { label: "D", html: "see off", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. set off (v):</b> Khởi hành<br><b>B. check out (v):</b> Trả phòng<br><b>C. pull in (v):</b> Tấp vào lề<br><b>D. see off (v):</b> Tiễn<br>Dịch: Chúng ta nên khởi hành bây giờ nếu muốn đến bờ biển trước khi mặt trời lặn.<br>Đáp án A đúng."
+  },
+  {
+    id: 15, type: "vocab",
+    questionHTML: "15. The cyclists are ______ the town centre.",
+    options: [
+      { label: "A", html: "making for", isCorrect: true },
+      { label: "B", html: "checking in", isCorrect: false },
+      { label: "C", html: "dropping off", isCorrect: false },
+      { label: "D", html: "getting back", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. make for (v):</b> Đi về hướng<br><b>B. check in (v):</b> Làm thủ tục<br><b>C. drop off (v):</b> Thả xuống<br><b>D. get back (v):</b> Quay lại<br>Dịch: Những người đi xe đạp đang hướng về trung tâm thị trấn.<br>Đáp án A đúng."
+  },
+  {
+    id: 16, type: "vocab",
+    questionHTML: "16. My parents came to the station to ______ me ______ before my journey.",
+    options: [
+      { label: "A", html: "pick / up", isCorrect: false },
+      { label: "B", html: "see / off", isCorrect: true },
+      { label: "C", html: "pull / in", isCorrect: false },
+      { label: "D", html: "check / out", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. pick up (v):</b> Đón<br><b>B. see off (v):</b> Tiễn ai đó<br><b>C. pull in (v):</b> Đỗ xe vào lề<br><b>D. check out (v):</b> Trả phòng<br>Dịch: Bố mẹ tôi đã đến ga để tiễn tôi trước chuyến đi của tôi.<br>Đáp án B đúng."
+  },
+  {
+    id: 17, type: "gapfill",
+    questionHTML: "17. We booked our train ____________ online three days before departure.",
+    options: [
+      { label: "A", html: "tickets", isCorrect: true },
+      { label: "B", html: "fees", isCorrect: false },
+      { label: "C", html: "fares", isCorrect: false },
+      { label: "D", html: "lines", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. tickets (n):</b> vé<br><b>B. fees (n):</b> lệ phí<br><b>C. fares (n):</b> giá vé<br><b>D. lines (n):</b> hàng<br>Dịch: Chúng tôi đã đặt vé tàu trực tuyến ba ngày trước khi khởi hành.<br>Đáp án A (tickets) đúng."
+  },
+  {
+    id: 18, type: "gapfill",
+    questionHTML: "18. The bus ____________ was more expensive than I expected.",
+    options: [
+      { label: "A", html: "fare", isCorrect: true },
+      { label: "B", html: "fee", isCorrect: false },
+      { label: "C", html: "border", isCorrect: false },
+      { label: "D", html: "sight", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. fare (n):</b> giá vé (xe/tàu)<br><b>B. fee (n):</b> lệ phí<br><b>C. border (n):</b> biên giới<br><b>D. sight (n):</b> tầm nhìn, cảnh quan<br>Dịch: Tiền vé xe buýt đắt hơn tôi dự kiến.<br>Đáp án A (fare) đúng."
+  },
+  {
+    id: 19, type: "gapfill",
+    questionHTML: "19. The museum charges a small entrance ____________.",
+    options: [
+      { label: "A", html: "ticket", isCorrect: false },
+      { label: "B", html: "fare", isCorrect: false },
+      { label: "C", html: "fee", isCorrect: true },
+      { label: "D", html: "view", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. ticket (n):</b> vé<br><b>B. fare (n):</b> giá vé<br><b>C. fee (n):</b> lệ phí<br><b>D. view (n):</b> tầm nhìn<br>Dịch: Bảo tàng thu một khoản phí vào cửa nhỏ.<br>Đáp án C (fee) đúng vì 'entrance fee' là phí vào cửa."
+  },
+  {
+    id: 20, type: "gapfill",
+    questionHTML: "20. From the top of the tower, we had a spectacular ____________ of the city.",
+    options: [
+      { label: "A", html: "sight", isCorrect: false },
+      { label: "B", html: "view", isCorrect: true },
+      { label: "C", html: "edge", isCorrect: false },
+      { label: "D", html: "border", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. sight (n):</b> cảnh quan<br><b>B. view (n):</b> tầm nhìn (từ 1 vị trí cụ thể)<br><b>C. edge (n):</b> rìa, mép<br><b>D. border (n):</b> biên giới<br>Dịch: Từ đỉnh tháp, chúng tôi có một tầm nhìn ngoạn mục ra thành phố.<br>Đáp án B (view) đúng."
+  },
+  {
+    id: 21, type: "gapfill",
+    questionHTML: "21. The ancient castle is one of the main ____________ in the region.",
+    options: [
+      { label: "A", html: "sights", isCorrect: true },
+      { label: "B", html: "views", isCorrect: false },
+      { label: "C", html: "lines", isCorrect: false },
+      { label: "D", html: "edges", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. sights (n):</b> danh lam thắng cảnh<br><b>B. views (n):</b> tầm nhìn<br><b>C. lines (n):</b> đường kẻ<br><b>D. edges (n):</b> rìa<br>Dịch: Lâu đài cổ là một trong những điểm tham quan chính trong khu vực.<br>Đáp án A (sights) đúng."
+  },
+  {
+    id: 22, type: "gapfill",
+    questionHTML: "22. The road runs along the ____________ of the forest.",
+    options: [
+      { label: "A", html: "edge", isCorrect: true },
+      { label: "B", html: "border", isCorrect: false },
+      { label: "C", html: "line", isCorrect: false },
+      { label: "D", html: "route", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. edge (n):</b> rìa, mép<br><b>B. border (n):</b> biên giới<br><b>C. line (n):</b> đường kẻ<br><b>D. route (n):</b> tuyến đường<br>Dịch: Con đường chạy dọc theo bìa rừng.<br>Đáp án A (edge) đúng vì 'edge of the forest' là bìa rừng."
+  },
+  {
+    id: 23, type: "gapfill",
+    questionHTML: "23. We crossed the national ____________ at 8 p.m.",
+    options: [
+      { label: "A", html: "border", isCorrect: true },
+      { label: "B", html: "edge", isCorrect: false },
+      { label: "C", html: "line", isCorrect: false },
+      { label: "D", html: "direction", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. border (n):</b> biên giới<br><b>B. edge (n):</b> rìa<br><b>C. line (n):</b> đường kẻ<br><b>D. direction (n):</b> hướng<br>Dịch: Chúng tôi đã băng qua biên giới quốc gia lúc 8 giờ tối.<br>Đáp án A (border) đúng."
+  },
+  {
+    id: 24, type: "gapfill",
+    questionHTML: "24. The white ____________ in the middle of the road must not be crossed.",
+    options: [
+      { label: "A", html: "line", isCorrect: true },
+      { label: "B", html: "edge", isCorrect: false },
+      { label: "C", html: "border", isCorrect: false },
+      { label: "D", html: "sight", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. line (n):</b> vạch kẻ<br><b>B. edge (n):</b> mép<br><b>C. border (n):</b> biên giới<br><b>D. sight (n):</b> thắng cảnh<br>Dịch: Vạch trắng ở giữa đường không được phép băng qua.<br>Đáp án A (line) đúng."
+  },
+  {
+    id: 25, type: "gapfill",
+    questionHTML: "25. Please ____________ at the hotel before going sightseeing.",
+    options: [
+      { label: "A", html: "check in", isCorrect: true },
+      { label: "B", html: "check out", isCorrect: false },
+      { label: "C", html: "set off", isCorrect: false },
+      { label: "D", html: "pull in", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. check in (v):</b> nhận phòng<br><b>B. check out (v):</b> trả phòng<br><b>C. set off (v):</b> khởi hành<br><b>D. pull in (v):</b> tấp vào lề<br>Dịch: Vui lòng nhận phòng tại khách sạn trước khi đi tham quan.<br>Đáp án A (check in) đúng."
+  },
+  {
+    id: 26, type: "gapfill",
+    questionHTML: "26. What time do we need to ____________ of the hotel tomorrow?",
+    options: [
+      { label: "A", html: "check out", isCorrect: true },
+      { label: "B", html: "check in", isCorrect: false },
+      { label: "C", html: "get back", isCorrect: false },
+      { label: "D", html: "make for", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. check out (v):</b> trả phòng<br><b>B. check in (v):</b> nhận phòng<br><b>C. get back (v):</b> quay lại<br><b>D. make for (v):</b> hướng đến<br>Dịch: Mấy giờ chúng ta cần trả phòng khách sạn ngày mai?<br>Đáp án A (check out) đúng."
+  },
+  {
+    id: 27, type: "gapfill",
+    questionHTML: "27. I'll ____________ you ____________ at the airport at 6 a.m.",
+    options: [
+      { label: "A", html: "see / off", isCorrect: false },
+      { label: "B", html: "pick / up", isCorrect: true },
+      { label: "C", html: "pull / in", isCorrect: false },
+      { label: "D", html: "check / out", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. see off (v):</b> tiễn<br><b>B. pick up (v):</b> đón (hoặc drop off: thả xuống)<br><b>C. pull in (v):</b> tấp lề<br><b>D. check out (v):</b> trả phòng<br>Dịch: Tôi sẽ đón bạn tại sân bay lúc 6 giờ sáng.<br>Đáp án B (pick up) đúng."
+  },
+  {
+    id: 28, type: "gapfill",
+    questionHTML: "28. The driver ____________ to let us out near the museum.",
+    options: [
+      { label: "A", html: "pulled in", isCorrect: true },
+      { label: "B", html: "dropped off", isCorrect: false },
+      { label: "C", html: "checked in", isCorrect: false },
+      { label: "D", html: "made for", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. pulled in (v):</b> tấp xe vào lề<br><b>B. dropped off (v):</b> thả khách<br><b>C. checked in (v):</b> nhận phòng<br><b>D. made for (v):</b> hướng về<br>Dịch: Tài xế đã tấp xe vào lề để cho chúng tôi xuống gần bảo tàng.<br>Đáp án A (pulled in) đúng."
+  },
+  {
+    id: 29, type: "gapfill",
+    questionHTML: "29. We need to ____________ now; the tour bus leaves in ten minutes.",
+    options: [
+      { label: "A", html: "set off", isCorrect: true },
+      { label: "B", html: "check out", isCorrect: false },
+      { label: "C", html: "catch up", isCorrect: false },
+      { label: "D", html: "get back", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. set off (v):</b> khởi hành<br><b>B. check out (v):</b> trả phòng<br><b>C. catch up (v):</b> bắt kịp<br><b>D. get back (v):</b> quay lại<br>Dịch: Chúng ta cần khởi hành ngay bây giờ; xe buýt du lịch sẽ rời đi trong mười phút nữa.<br>Đáp án A (set off) đúng."
+  },
+  {
+    id: 30, type: "gapfill",
+    questionHTML: "30. After getting lost, we finally ____________ to the main road.",
+    options: [
+      { label: "A", html: "got back", isCorrect: true },
+      { label: "B", html: "checked in", isCorrect: false },
+      { label: "C", html: "pulled in", isCorrect: false },
+      { label: "D", html: "dropped off", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. got back (v):</b> quay trở lại<br><b>B. checked in (v):</b> nhận phòng<br><b>C. pulled in (v):</b> tấp vào<br><b>D. dropped off (v):</b> thả khách<br>Dịch: Sau khi bị lạc, cuối cùng chúng tôi đã quay trở lại con đường chính.<br>Đáp án A (got back) đúng."
+  },
+  {
+    id: 31, type: "gapfill",
+    questionHTML: "31. The fastest way to reach the coast is to ____________ the motorway.",
+    options: [
+      { label: "A", html: "make for", isCorrect: true },
+      { label: "B", html: "pull in", isCorrect: false },
+      { label: "C", html: "set off", isCorrect: false },
+      { label: "D", html: "check out", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. make for (v):</b> hướng về phía, đi về phía<br><b>B. pull in (v):</b> tấp vào<br><b>C. set off (v):</b> khởi hành<br><b>D. check out (v):</b> trả phòng<br>Dịch: Cách nhanh nhất để đến bờ biển là đi về phía đường cao tốc.<br>Đáp án A (make for) đúng."
+  },
+  {
+    id: 32, type: "gapfill",
+    questionHTML: "32. Don't worry if you're behind; you can ____________ the others later.",
+    options: [
+      { label: "A", html: "catch up with", isCorrect: true },
+      { label: "B", html: "drop off", isCorrect: false },
+      { label: "C", html: "make for", isCorrect: false },
+      { label: "D", html: "see off", isCorrect: false }
+    ],
+    explanationHTML: "<b>A. catch up with (v):</b> bắt kịp<br><b>B. drop off (v):</b> thả xuống<br><b>C. make for (v):</b> hướng đến<br><b>D. see off (v):</b> tiễn<br>Dịch: Đừng lo lắng nếu bạn bị tụt lại phía sau; bạn có thể bắt kịp những người khác sau.<br>Đáp án A (catch up with) đúng."
+  }
+];
+
+let userState = {};
+quizData.forEach(q => {
+  userState[q.id] = { selected: null, checked: false, isCorrect: null };
+});
+
+function shuffleArray(arr) {
+  let array = [...arr];
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    
+  }
+  return array;
+}
+
+const quizContainer = document.getElementById("quiz-container");
+const labels = ["A", "B", "C", "D"];
+
+quizData.forEach(q => {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.id = `card-${q.id}`;
+  
+  let qHtml = `<div class="question">${q.questionHTML}</div>`;
+  qHtml += `<div class="options-container" id="options-${q.id}">`;
+  
+  let shuffledOptions = shuffleArray(q.options);
+  let shuffledLabels = shuffleArray(labels);
+  
+  let displayOptions = shuffledOptions.map((opt, idx) => {
+    return {
+      displayLabel: shuffledLabels[idx],
+      originalLabel: opt.label,
+      html: opt.html,
+      isCorrect: opt.isCorrect
+    };
+  });
+  
+  displayOptions.sort((a,b) => a.displayLabel.localeCompare(b.displayLabel));
+  
+  displayOptions.forEach(opt => {
+    qHtml += `<div class="option" data-original-label="${opt.originalLabel}" onclick="selectOption(${q.id}, '${opt.originalLabel}', this)">
+      <span class="option-label">${opt.displayLabel}.</span> ${opt.html}
+    </div>`;
+  });
+  
+  qHtml += `</div>
+    <button class="check-btn" id="check-btn-${q.id}" onclick="checkAnswer(${q.id})" disabled>Kiểm tra</button>
+    <div class="explanation" id="expl-${q.id}">${q.explanationHTML}</div>
+  `;
+  
+  card.innerHTML = qHtml;
+  quizContainer.appendChild(card);
+});
+
+function updateProgress() {
+  let selectedCount = Object.values(userState).filter(s => s.selected !== null).length;
+  document.getElementById("progress-count").textContent = selectedCount;
+  document.getElementById("progress-bar").style.width = (selectedCount / quizData.length * 100) + "%";
+}
+
+function selectOption(qId, originalLabel, elem) {
+  if (userState[qId].checked) return;
+  
+  userState[qId].selected = originalLabel;
+  
+  const optionsDiv = document.getElementById(`options-${qId}`);
+  Array.from(optionsDiv.children).forEach(child => child.classList.remove('pending'));
+  elem.classList.add('pending');
+  
+  document.getElementById(`check-btn-${qId}`).disabled = false;
+  playSelectSound();
+  updateProgress();
+}
+
+function checkAnswer(qId, auto = false) {
+  const state = userState[qId];
+  if (state.checked || state.selected === null) return;
+  
+  const qItem = quizData.find(q => q.id === qId);
+  const correctOpt = qItem.options.find(o => o.isCorrect);
+  
+  state.isCorrect = (state.selected === correctOpt.label);
+  state.checked = true;
+  
+  const optionsDiv = document.getElementById(`options-${qId}`);
+  Array.from(optionsDiv.children).forEach(child => {
+    child.classList.remove('pending');
+    child.style.pointerEvents = "none";
+    const optLabel = child.getAttribute('data-original-label');
+    if (optLabel === correctOpt.label) {
+      child.classList.add('correct');
+    } else if (optLabel === state.selected && !state.isCorrect) {
+      child.classList.add('wrong');
+    }
+  });
+  
+  document.getElementById(`check-btn-${qId}`).style.display = "none";
+  document.getElementById(`expl-${qId}`).style.display = "block";
+  
+  if (!auto) {
+    if (state.isCorrect) playCorrectSound();
+    else playWrongSound();
+  }
+}
+
+document.getElementById("submit-btn").addEventListener("click", function() {
+  const studentName = document.getElementById("studentName").value.trim();
+  if (!studentName) {
+    alert("Vui lòng nhập tên học sinh trước khi nộp bài!");
+    return;
+  }
+  
+  let totalCorrect = 0;
+  let wrongDetails = [];
+  
+  quizData.forEach(q => {
+    const state = userState[q.id];
+    if (!state.checked) {
+      if (state.selected !== null) {
+        checkAnswer(q.id, true);
+      } else {
+        state.checked = true;
+        state.isCorrect = false;
+        
+        const qItem = quizData.find(x => x.id === q.id);
+        const correctOpt = qItem.options.find(o => o.isCorrect);
+        
+        const optionsDiv = document.getElementById(`options-${q.id}`);
+        Array.from(optionsDiv.children).forEach(child => {
+          child.style.pointerEvents = "none";
+          if (child.getAttribute('data-original-label') === correctOpt.label) {
+            child.classList.add('correct');
+          }
+        });
+        document.getElementById(`check-btn-${q.id}`).style.display = "none";
+        document.getElementById(`expl-${q.id}`).style.display = "block";
+      }
+    }
+    
+    if (state.isCorrect) {
+      totalCorrect++;
+    } else {
+      wrongDetails.push(`Câu ${q.id}: Chọn ${state.selected || 'Bỏ trống'}`);
+    }
+  });
+  
+  let scoreRatio = `${totalCorrect}/${quizData.length}`;
+  let score10 = (totalCorrect / quizData.length * 10).toFixed(1);
+  let feedback = score10 >= 8 ? "Giỏi quá!" : score10 >= 5 ? "Làm tốt lắm!" : "Cần cố gắng hơn nhé!";
+  
+  alert(`Điểm của bạn: ${scoreRatio} (${score10} điểm)\n${feedback}`);
+  this.disabled = true;
+  playCorrectSound();
+  
+  const formUrl = `https://docs.google.com/forms/d/e/1FAIpQLSelQyzh_lWyb2vZUnQ1jc1p9FLRknDZiUt9NiUiiX1epHTFLw/formResponse?usp=pp_url&entry.351633352=U1U2%20De%202&entry.1895948982=${encodeURIComponent(studentName)}&entry.1232319784=${encodeURIComponent(score10)}&entry.1125920425=${encodeURIComponent(scoreRatio)}&entry.1907417670=${encodeURIComponent(wrongDetails.join(", "))}`;
+  
+  fetch(formUrl, { mode: 'no-cors' }).catch(err => console.log(err));
+  
+  renderSummaryTable();
+  document.getElementById("summary-container").style.display = "block";
+  document.getElementById("summary-container").scrollIntoView({behavior: "smooth"});
+});
+
+function renderSummaryTable() {
+  const container = document.getElementById("summary-tables");
+  container.innerHTML = "";
+  
+  const chunkSize = 16;
+  for (let i = 0; i < quizData.length; i += chunkSize) {
+    let chunk = quizData.slice(i, i + chunkSize);
+    let table = document.createElement("table");
+    table.className = "summary-table";
+    
+    let trHead = document.createElement("tr");
+    let thLabel = document.createElement("th");
+    thLabel.textContent = "Câu";
+    trHead.appendChild(thLabel);
+    chunk.forEach(q => {
+      let th = document.createElement("th");
+      th.textContent = q.id;
+      if (userState[q.id].selected === null) th.className = "empty-cell";
+      trHead.appendChild(th);
+    });
+    table.appendChild(trHead);
+    
+    labels.forEach(lbl => {
+      let tr = document.createElement("tr");
+      let tdLabel = document.createElement("td");
+      tdLabel.innerHTML = `<b>${lbl}</b>`;
+      tr.appendChild(tdLabel);
+      
+      chunk.forEach(q => {
+        let td = document.createElement("td");
+        td.textContent = lbl;
+        const state = userState[q.id];
+        const correctOpt = q.options.find(o => o.isCorrect).label;
+        
+        if (state.selected === null) {
+          td.className = "empty-cell";
+        } else if (lbl === correctOpt) {
+          td.className = "correct-cell";
+        } else if (lbl === state.selected && !state.isCorrect) {
+          td.className = "wrong-cell";
+        } else {
+          td.className = "neutral-cell";
+        }
+        tr.appendChild(td);
+      });
+      table.appendChild(tr);
+    });
+    
+    container.appendChild(table);
+    container.appendChild(document.createElement("br"));
+  }
+}
+</script>
+</body>
+</html>
