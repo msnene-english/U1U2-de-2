@@ -874,9 +874,20 @@ document.getElementById("submit-btn").addEventListener("click", function() {
   this.disabled = true;
   playCorrectSound();
   
-  const formUrl = `https://docs.google.com/forms/d/e/1FAIpQLSelQyzh_lWyb2vZUnQ1jc1p9FLRknDZiUt9NiUiiX1epHTFLw/formResponse?usp=pp_url&entry.351633352=U1U2%20De%202&entry.1895948982=${encodeURIComponent(studentName)}&entry.1232319784=${encodeURIComponent(score10)}&entry.1125920425=${encodeURIComponent(scoreRatio)}&entry.1907417670=${encodeURIComponent(wrongDetails.join(", "))}`;
-  
-  fetch(formUrl, { mode: 'no-cors' }).catch(err => console.log(err));
+  const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSelQyzh_lWyb2vZUnQ1jc1p9FLRknDZiUt9NiUiiX1epHTFLw/formResponse";
+  const formBody = new URLSearchParams({
+    "entry.351633352": "U1-U2 Đề 2",
+    "entry.1895948982": studentName,
+    "entry.1232319784": score10,
+    "entry.1125920425": scoreRatio,
+    "entry.1907417670": wrongDetails.length > 0 ? wrongDetails.join(", ") : "Không có"
+  });
+  fetch(formUrl, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: formBody.toString()
+  }).catch(err => console.log(err));
   
   renderSummaryTable();
   document.getElementById("summary-container").style.display = "block";
