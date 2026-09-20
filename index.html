@@ -4,316 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>U1-U2 Đề 2</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --color-primary: #4F46E5;
-            --color-secondary: #06B6D4;
-            --color-accent: #F59E0B;
-            --color-bg: #F8FAFC;
-            --color-card: #FFFFFF;
-            --color-correct: #22C55E;
-            --color-wrong: #EF4444;
-            --color-selecting: #2563EB;
-            --color-pending: #FEF3C7;
-            --color-pending-text: #92400E;
-            font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
-        }
-        body {
-            background-color: var(--color-bg);
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-        #start-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-        .start-card {
-            background: var(--color-card);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-        }
-        .start-card h2 { margin-top: 0; }
-        .start-card input {
-            width: 100%;
-            padding: 12px;
-            margin: 15px 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        .start-card button {
-            background: var(--color-primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-        }
-        .start-card button:hover { opacity: 0.9; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; position: relative; z-index: 1; }
+        .watermark { position: absolute; top: 30px; left: 0; right: 0; text-align: center; font-size: 50px; color: rgba(0, 0, 0, 0.04); font-weight: bold; pointer-events: none; z-index: -1; user-select: none; }
+        .watermark div { transform: rotate(-30deg); margin: 200px 0; }
+        h1, h2 { color: #2c3e50; text-align: center; }
+        .screen { display: none; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .screen.active { display: block; }
         
-        .watermark {
-            position: absolute;
-            top: 10px; left: 10px;
-            font-size: 14px;
-            color: #666;
-            font-weight: 600;
-            z-index: 1000;
-        }
-        .watermark-footer {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-            font-weight: 600;
-        }
+        input[type="text"] { width: 100%; padding: 12px; margin: 10px 0 20px; border: 2px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; transition: border-color 0.3s; }
+        input[type="text"]:focus { border-color: #3498db; outline: none; }
         
-        header {
-            background: white;
-            padding: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            position: relative;
-            z-index: 100;
-        }
-        .progress-container {
-            width: 100%;
-            background: #e0e0e0;
-            height: 8px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-        #progress-bar {
-            height: 100%;
-            background: var(--color-primary);
-            border-radius: 4px;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        .header-info {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 500;
-            font-size: 15px;
-        }
+        button { background: #3498db; color: #fff; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; transition: background 0.3s, transform 0.1s; }
+        button:hover { background: #2980b9; }
+        button:active { transform: scale(0.98); }
+        button:disabled { background: #95a5a6; cursor: not-allowed; }
         
-        main {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        .card {
-            background: var(--color-card);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-        }
-        .question-text {
-            font-size: 21px;
-            font-weight: 600;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .option {
-            padding: 14px 20px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 500;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-        }
-        .option:hover { background: #f8fafc; }
-        .option.pending {
-            background: var(--color-pending);
-            color: var(--color-pending-text);
-            border-color: var(--color-pending-text);
-            transform: scale(1.02);
-        }
-        .option.correct {
-            background: var(--color-correct);
-            color: white;
-            border-color: var(--color-correct);
-        }
-        .option.wrong {
-            background: var(--color-wrong);
-            color: white;
-            border-color: var(--color-wrong);
-            animation: shake 0.3s;
-        }
+        .question-block { margin-bottom: 25px; padding: 15px; background: #f9f9f9; border-left: 4px solid #3498db; border-radius: 0 8px 8px 0; }
+        .instruction-box { margin-bottom: 15px; padding: 10px 15px; background: #e8f4fd; border: 1px solid #b6d4fe; border-radius: 6px; font-weight: bold; color: #004085; }
+        .question-text { font-weight: 500; margin-bottom: 15px; font-size: 16px; line-height: 1.8; }
         
-        .gap-fill-input {
-            font-size: 18px;
-            padding: 10px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            width: 100%;
-            box-sizing: border-box;
-            margin-top: 10px;
-            transition: all 0.2s;
-        }
-        .gap-fill-input:focus {
-            border-color: var(--color-primary);
-            outline: none;
-            background: var(--color-pending);
-            color: var(--color-pending-text);
-        }
-        .gap-fill-input.correct {
-            background: var(--color-correct);
-            color: white;
-            border-color: var(--color-correct);
-        }
-        .gap-fill-input.wrong {
-            background: var(--color-wrong);
-            color: white;
-            border-color: var(--color-wrong);
-        }
+        .options { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .option { padding: 12px 15px; background: #fff; border: 2px solid #eee; border-radius: 8px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; }
+        .option:hover { border-color: #3498db; background: #f8faff; }
+        .option.selected { border-color: #3498db; background: #ebf5ff; }
+        .option.correct-opt { border-color: #2ecc71; background: #eafaf1; }
+        .option.wrong-opt { border-color: #e74c3c; background: #fdedec; }
         
-        .check-btn {
-            margin-top: 20px;
-            background: var(--color-secondary);
-            color: white;
-            border: none;
-            padding: 14px 24px;
-            font-size: 17px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            min-height: 52px;
-        }
-        .check-btn:disabled {
-            background: #cbd5e1;
-            cursor: not-allowed;
-        }
-        .explanation {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f1f5f9;
-            border-radius: 8px;
-            font-size: 17px;
-            line-height: 1.8;
-            display: none;
-        }
+        .radio-circle { width: 20px; height: 20px; border: 2px solid #ddd; border-radius: 50%; position: relative; }
+        .option.selected .radio-circle::after { content: ''; position: absolute; top: 4px; left: 4px; width: 12px; height: 12px; background: #3498db; border-radius: 50%; }
         
-        .submit-container {
-            text-align: center;
-            margin: 40px 0;
-        }
-        #submit-btn {
-            background: var(--color-primary);
-            color: white;
-            border: none;
-            padding: 16px 40px;
-            font-size: 20px;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        #submit-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+        .gap-fill-input { width: 120px !important; padding: 4px 8px !important; margin: 0 5px !important; display: inline-block !important; border: 1px solid #ccc !important; border-radius: 4px !important; font-size: 16px !important; }
         
-        #error-list { margin-top: 40px; }
+        .reordering-container { display: flex; flex-direction: column; gap: 15px; }
+        .word-bank, .drop-zone { display: flex; flex-wrap: wrap; gap: 8px; min-height: 45px; padding: 10px; background: #fff; border: 2px dashed #ddd; border-radius: 8px; }
+        .word-chip { padding: 8px 16px; background: #3498db; color: #fff; border-radius: 20px; cursor: pointer; user-select: none; font-weight: 500; transition: transform 0.1s; }
+        .word-chip:active { transform: scale(0.95); }
+        .word-chip.correct { background: #2ecc71; }
+        .word-chip.wrong { background: #e74c3c; }
         
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-            100% { transform: translateX(0); }
-        }
+        .rewrite-input { width: 100%; height: 80px; padding: 12px; border: 2px solid #ddd; border-radius: 6px; resize: vertical; font-size: 16px; font-family: inherit; }
         
-        @media (max-width: 600px) {
-            .question-text { font-size: 20px; }
-            .option, .gap-fill-input { font-size: 17px; }
-            .explanation { font-size: 16px; }
-            .card { padding: 16px; }
-        }
+        .check-btn { margin-top: 15px; background: #3498db; font-size: 14px; padding: 8px 16px; }
+        .explanation { display: none; margin-top: 15px; padding: 15px; background: #eef2f5; border-radius: 6px; font-size: 14.5px; line-height: 1.5; color: #2c3e50; border-left: 4px solid #2ecc71; }
+        
+        .progress-bar { width: 100%; height: 10px; background: #ddd; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #2ecc71; width: 0%; transition: width 0.3s; }
+        
+        .result-details { margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; text-align: left; max-height: 300px; overflow-y: auto; font-size: 14px; }
+        .error-item { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee; color: #e74c3c; }
     </style>
 </head>
 <body>
-    <div id="start-screen">
-        <div class="start-card">
-            <h2>Chào mừng bạn đến với bài test</h2>
-            <p>U1-U2 Đề 2</p>
-            <input type="text" id="student-name-input" placeholder="Nhập tên của bạn...">
-            <button id="start-btn">Bắt đầu làm bài</button>
-        </div>
-    </div>
-    
-    <div id="app" style="display:none;">
-        <div class="watermark">GV biên soạn: Ms Chí Nên - 0852639652</div>
-        <header>
-            <div class="progress-container"><div id="progress-bar"></div></div>
-            <div class="header-info">
-                <span>Tên: <span id="display-name"></span></span>
-                <span>Tiến độ: <span id="progress-text">0/32</span></span>
-            </div>
-        </header>
-        <main id="quiz-container"></main>
-        <div class="submit-container">
-            <button id="submit-btn" disabled>Nộp bài</button>
-        </div>
-        <div id="error-list-container" style="display:none; max-width:800px; margin: 0 auto; padding: 0 20px;">
-            <h2 style="color:var(--color-wrong); border-bottom:2px solid; padding-bottom:10px;">DANH SÁCH CÁC CÂU LÀM SAI</h2>
-            <div id="error-list"></div>
-        </div>
-        <div class="watermark-footer">GV biên soạn: Ms Chí Nên - 0852639652</div>
+    <div class="watermark">
+        <div>U1-U2 Đề 1</div>
+        <div>U1-U2 Đề 1</div>
+        <div>U1-U2 Đề 1</div>
+        <div>U1-U2 Đề 1</div>
     </div>
 
-<script>
-(function() {
-    let audioCtx = null;
-    function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    function playTone(freq1, freq2, type, duration, vol) {
-        if (!audioCtx) return;
-        try {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq1, audioCtx.currentTime);
-            if (freq2) osc.frequency.exponentialRampToValueAtTime(freq2, audioCtx.currentTime + duration/2);
-            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
-        } catch(e){}
-    }
-    const playSelectSound = () => playTone(600, null, 'sine', 0.08, 0.15);
-    const playCorrectSound = () => playTone(800, 1200, 'sine', 0.25, 0.2);
-    const playWrongSound = () => playTone(150, null, 'square', 0.2, 0.12);
-    const playSubmitSound = () => playTone(500, null, 'triangle', 0.12, 0.15);
-    
-    function escapeHTML(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
-    function normalizeAnswer(str) { return (str || '').trim().replace(/\s+/g,' ').toLowerCase(); }
-    
-    const quizData = [
-        { id:1, type: "multiple_choice", questionHTML: "1. A long journey, especially by sea or in space, is called a ______.", options: [ {label:"A", html:"A. trip", isCorrect:false}, {label:"B", html:"B. voyage", isCorrect:true}, {label:"C", html:"C. excursion", isCorrect:false}, {label:"D", html:"D. fare", isCorrect:false} ], explanationHTML: "<b>Dịch câu hỏi:</b> Một chuyến đi dài, đặc biệt là trên biển hoặc trong không gian, được gọi là một ______.<br><b>Giải thích:</b><br>- A. trip (n): chuyến đi ngắn<br>- B. voyage (n): chuyến đi xa, dài ngày (trên biển/không gian) -> <b>Đúng</b><br>- C. excursion (n): chuyến đi chơi, dã ngoại<br>- D. fare (n): tiền xe, vé xe<br>Vì đây là chuyến đi dài trên biển/không gian nên 'voyage' là đáp án đúng." },
+    <div id="startScreen" class="screen active">
+        <h1>U1-U2 Đề 2</h1>
+        <p style="text-align: center; color: #7f8c8d;">Nhập họ và tên của bạn để bắt đầu làm bài</p>
+        <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn A" autocomplete="off">
+        <div style="text-align: center;">
+            <button onclick="startTest()">Bắt đầu làm bài</button>
+        </div>
+    </div>
+
+    <div id="testScreen" class="screen">
+        <h2>U1-U2 Đề 2</h2>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div id="questionsContainer"></div>
+        <div style="text-align: center; margin-top: 30px;">
+            <button id="submitBtn" onclick="confirmSubmit()" style="background: #2ecc71; font-weight: bold; padding: 15px 40px;">NỘP BÀI</button>
+        </div>
+    </div>
+
+    <div id="resultScreen" class="screen" style="text-align: center;">
+        <h1 style="color: #2ecc71; font-size: 36px;">Hoàn thành!</h1>
+        <h2 id="scoreDisplay" style="font-size: 48px; margin: 20px 0; color: #2c3e50;"></h2>
+        <p id="feedbackText" style="font-size: 18px; color: #7f8c8d;"></p>
+        <div class="result-details" id="resultDetails"></div>
+    </div>
+
+    <script>
+        const testName = 'U1-U2 Đề 2';
+        const quizData = [
+        { id:1, type: "multiple_choice", questionHTML: "<b>I. Choose the correct answer.</b><br>1. A long journey, especially by sea or in space, is called a ______.", options: [ {label:"A", html:"A. trip", isCorrect:false}, {label:"B", html:"B. voyage", isCorrect:true}, {label:"C", html:"C. excursion", isCorrect:false}, {label:"D", html:"D. fare", isCorrect:false} ], explanationHTML: "<b>Dịch câu hỏi:</b> Một chuyến đi dài, đặc biệt là trên biển hoặc trong không gian, được gọi là một ______.<br><b>Giải thích:</b><br>- A. trip (n): chuyến đi ngắn<br>- B. voyage (n): chuyến đi xa, dài ngày (trên biển/không gian) -> <b>Đúng</b><br>- C. excursion (n): chuyến đi chơi, dã ngoại<br>- D. fare (n): tiền xe, vé xe<br>Vì đây là chuyến đi dài trên biển/không gian nên 'voyage' là đáp án đúng." },
         { id:2, type: "multiple_choice", questionHTML: "2. We went on a short ______ to a nearby island and returned before dinner.", options: [ {label:"A", html:"A. excursion", isCorrect:true}, {label:"B", html:"B. border", isCorrect:false}, {label:"C", html:"C. journey", isCorrect:false}, {label:"D", html:"D. fee", isCorrect:false} ], explanationHTML: "<b>Dịch câu hỏi:</b> Chúng tôi đã có một ______ ngắn đến một hòn đảo gần đó và trở về trước bữa tối.<br><b>Giải thích:</b><br>- A. excursion (n): chuyến tham quan, dã ngoại ngắn -> <b>Đúng</b><br>- B. border (n): biên giới<br>- C. journey (n): hành trình, chuyến đi (thường dài)<br>- D. fee (n): lệ phí<br>Chuyến đi ngắn (short) và trở về nhanh chóng phù hợp với 'excursion'." },
         { id:3, type: "multiple_choice", questionHTML: "3. The mountain ______ from our hotel room was breathtaking.", options: [ {label:"A", html:"A. sight", isCorrect:false}, {label:"B", html:"B. view", isCorrect:true}, {label:"C", html:"C. fare", isCorrect:false}, {label:"D", html:"D. line", isCorrect:false} ], explanationHTML: "<b>Dịch câu hỏi:</b> Cảnh núi non từ phòng khách sạn của chúng tôi thật đẹp đến nghẹt thở.<br><b>Giải thích:</b><br>- A. sight (n): thị lực, cảnh tượng (nhìn chung)<br>- B. view (n): khung cảnh, cảnh quan (từ một vị trí cụ thể nhìn ra) -> <b>Đúng</b><br>- C. fare (n): giá vé<br>- D. line (n): đường kẻ, tuyến<br>Nhìn từ một vị trí (phòng khách sạn) dùng 'view'." },
         { id:4, type: "multiple_choice", questionHTML: "4. The Eiffel Tower is one of the most famous tourist ______ in Paris.", options: [ {label:"A", html:"A. views", isCorrect:false}, {label:"B", html:"B. fares", isCorrect:false}, {label:"C", html:"C. sights", isCorrect:true}, {label:"D", html:"D. edges", isCorrect:false} ], explanationHTML: "<b>Dịch câu hỏi:</b> Tháp Eiffel là một trong những ______ du lịch nổi tiếng nhất ở Paris.<br><b>Giải thích:</b><br>- A. views (n): khung cảnh<br>- B. fares (n): vé xe<br>- C. sights (n): cảnh đẹp, danh lam thắng cảnh -> <b>Đúng</b>, cụm 'tourist sights' (địa điểm thu hút khách du lịch).<br>- D. edges (n): rìa, mép" },
@@ -329,245 +107,400 @@
         { id:14, type: "multiple_choice", questionHTML: "14. We should ______ now if we want to reach the coast before sunset.", options: [ {label:"A", html:"A. set off", isCorrect:true}, {label:"B", html:"B. check out", isCorrect:false}, {label:"C", html:"C. pull in", isCorrect:false}, {label:"D", html:"D. see off", isCorrect:false} ], explanationHTML: "<b>Dịch câu hỏi:</b> Chúng ta nên khởi hành bây giờ nếu muốn đến bờ biển trước lúc mặt trời lặn.<br><b>Giải thích:</b><br>- A. set off: khởi hành, bắt đầu chuyến đi -> <b>Đúng</b><br>- B. check out: trả phòng<br>- C. pull in: tấp xe vào lề/bến<br>- D. see off: tiễn" },
         { id:15, type: "multiple_choice", questionHTML: "15. The cyclists are ______ the town centre.", options: [ {label:"A", html:"A. making for", isCorrect:true}, {label:"B", html:"B. checking in", isCorrect:false}, {label:"C", html:"C. dropping off", isCorrect:false}, {label:"D", html:"D. getting back", isCorrect:false} ], explanationHTML: "<b>Dịch câu hỏi:</b> Những người đi xe đạp đang đi về hướng trung tâm thị trấn.<br><b>Giải thích:</b><br>- A. make for: đi về hướng, tiến thẳng đến -> <b>Đúng</b><br>- B. check in: làm thủ tục<br>- C. drop off: cho xuống xe<br>- D. get back: quay về" },
         { id:16, type: "multiple_choice", questionHTML: "16. My parents came to the station to ______ me ______ before my journey.", options: [ {label:"A", html:"A. pick / up", isCorrect:false}, {label:"B", html:"B. see / off", isCorrect:true}, {label:"C", html:"C. pull / in", isCorrect:false}, {label:"D", html:"D. check / out", isCorrect:false} ], explanationHTML: "<b>Dịch câu hỏi:</b> Bố mẹ tôi đã đến nhà ga để tiễn tôi trước chuyến đi.<br><b>Giải thích:</b><br>- A. pick up: đón<br>- B. see off: tiễn (ai đó) lên đường -> <b>Đúng</b>, 'see me off' (tiễn tôi).<br>- C. pull in: đỗ xe<br>- D. check out: trả phòng" },
-        { id:17, type: "gap_fill_text", questionHTML: "17. We booked our train <input type=\"text\" class=\"gap-fill-input\" data-id=\"17\" placeholder=\"...\"> online three days before departure.", correctAnswers: ["tickets"], explanationHTML: "<b>Dịch câu:</b> Chúng tôi đã đặt <b>vé</b> tàu trực tuyến ba ngày trước khi khởi hành.<br><b>Giải thích:</b> Cần danh từ chỉ vé tàu. 'train tickets' (vé tàu)." },
-        { id:18, type: "gap_fill_text", questionHTML: "18. The bus <input type=\"text\" class=\"gap-fill-input\" data-id=\"18\" placeholder=\"...\"> was more expensive than I expected.", correctAnswers: ["fare"], explanationHTML: "<b>Dịch câu:</b> <b>Giá vé</b> xe buýt đắt hơn tôi mong đợi.<br><b>Giải thích:</b> 'bus fare' (giá vé xe buýt)." },
-        { id:19, type: "gap_fill_text", questionHTML: "19. The museum charges a small entrance <input type=\"text\" class=\"gap-fill-input\" data-id=\"19\" placeholder=\"...\">.", correctAnswers: ["fee"], explanationHTML: "<b>Dịch câu:</b> Bảo tàng thu một khoản <b>phí</b> vào cửa nhỏ.<br><b>Giải thích:</b> 'entrance fee' (phí vào cửa)." },
-        { id:20, type: "gap_fill_text", questionHTML: "20. From the top of the tower, we had a spectacular <input type=\"text\" class=\"gap-fill-input\" data-id=\"20\" placeholder=\"...\"> of the city.", correctAnswers: ["view"], explanationHTML: "<b>Dịch câu:</b> Từ đỉnh tháp, chúng tôi có <b>khung cảnh</b> tuyệt đẹp của thành phố.<br><b>Giải thích:</b> 'have a view of' (có tầm nhìn, khung cảnh về phía)." },
-        { id:21, type: "gap_fill_text", questionHTML: "21. The ancient castle is one of the main <input type=\"text\" class=\"gap-fill-input\" data-id=\"21\" placeholder=\"...\"> in the region.", correctAnswers: ["sights"], explanationHTML: "<b>Dịch câu:</b> Lâu đài cổ là một trong những <b>thắng cảnh</b> chính trong vùng.<br><b>Giải thích:</b> 'sights' (danh lam thắng cảnh). Nằm sau 'one of the main...' nên cần danh từ số nhiều." },
-        { id:22, type: "gap_fill_text", questionHTML: "22. The road runs along the <input type=\"text\" class=\"gap-fill-input\" data-id=\"22\" placeholder=\"...\"> of the forest.", correctAnswers: ["edge"], explanationHTML: "<b>Dịch câu:</b> Con đường chạy dọc theo <b>rìa/mép</b> của khu rừng.<br><b>Giải thích:</b> 'edge of the forest' (bìa rừng, mép rừng)." },
-        { id:23, type: "gap_fill_text", questionHTML: "23. We crossed the national <input type=\"text\" class=\"gap-fill-input\" data-id=\"23\" placeholder=\"...\"> at 8 p.m.", correctAnswers: ["border"], explanationHTML: "<b>Dịch câu:</b> Chúng tôi đã vượt qua <b>biên giới</b> quốc gia lúc 8 giờ tối.<br><b>Giải thích:</b> 'national border' (biên giới quốc gia)." },
-        { id:24, type: "gap_fill_text", questionHTML: "24. The white <input type=\"text\" class=\"gap-fill-input\" data-id=\"24\" placeholder=\"...\"> in the middle of the road must not be crossed.", correctAnswers: ["line"], explanationHTML: "<b>Dịch câu:</b> Không được đè vạch kẻ <b>đường</b> màu trắng ở giữa đường.<br><b>Giải thích:</b> 'white line' (vạch kẻ màu trắng)." },
-        { id:25, type: "gap_fill_text", questionHTML: "25. Please <input type=\"text\" class=\"gap-fill-input\" data-id=\"25\" placeholder=\"...\"> at the hotel before going sightseeing.", correctAnswers: ["check in", "check-in"], explanationHTML: "<b>Dịch câu:</b> Vui lòng <b>nhận phòng</b> tại khách sạn trước khi đi ngắm cảnh.<br><b>Giải thích:</b> 'check in' (làm thủ tục nhận phòng)." },
-        { id:26, type: "gap_fill_text", questionHTML: "26. What time do we need to <input type=\"text\" class=\"gap-fill-input\" data-id=\"26\" placeholder=\"...\"> of the hotel tomorrow?", correctAnswers: ["check out", "check-out"], explanationHTML: "<b>Dịch câu:</b> Ngày mai chúng ta cần <b>trả phòng</b> khách sạn lúc mấy giờ?<br><b>Giải thích:</b> 'check out of' (làm thủ tục trả phòng)." },
-        { id:27, type: "gap_fill_text", questionHTML: "27. I'll <input type=\"text\" class=\"gap-fill-input\" data-id=\"27\" placeholder=\"...\"> at the airport at 6 a.m. (điền cả cụm)", correctAnswers: ["pick you up", "pick up"], explanationHTML: "<b>Dịch câu:</b> Tôi sẽ <b>đón</b> bạn ở sân bay lúc 6 giờ sáng.<br><b>Giải thích:</b> Phrasal verb 'pick sb up' (đón ai đó)." },
-        { id:28, type: "gap_fill_text", questionHTML: "28. The driver <input type=\"text\" class=\"gap-fill-input\" data-id=\"28\" placeholder=\"...\"> to let us out near the museum.", correctAnswers: ["pulled in", "stopped", "pulled over"], explanationHTML: "<b>Dịch câu:</b> Người lái xe đã <b>tấp vào/dừng lại</b> để cho chúng tôi xuống gần bảo tàng.<br><b>Giải thích:</b> 'pull in' / 'pull over' / 'stop' đều có nghĩa là tấp xe vào lề, dừng xe lại." },
-        { id:29, type: "gap_fill_text", questionHTML: "29. We need to <input type=\"text\" class=\"gap-fill-input\" data-id=\"29\" placeholder=\"...\"> now; the tour bus leaves in ten minutes.", correctAnswers: ["set off"], explanationHTML: "<b>Dịch câu:</b> Chúng ta cần <b>khởi hành</b> ngay bây giờ; xe buýt du lịch sẽ rời đi sau mười phút nữa.<br><b>Giải thích:</b> 'set off' (khởi hành)." },
-        { id:30, type: "gap_fill_text", questionHTML: "30. After getting lost, we finally <input type=\"text\" class=\"gap-fill-input\" data-id=\"30\" placeholder=\"...\"> to the main road.", correctAnswers: ["got back", "made it back"], explanationHTML: "<b>Dịch câu:</b> Sau khi bị lạc, cuối cùng chúng tôi cũng <b>quay lại</b> được con đường chính.<br><b>Giải thích:</b> 'get back to' hoặc 'make it back to' (quay trở lại)." },
-        { id:31, type: "gap_fill_text", questionHTML: "31. The fastest way to reach the coast is to <input type=\"text\" class=\"gap-fill-input\" data-id=\"31\" placeholder=\"...\"> the motorway.", correctAnswers: ["make for"], explanationHTML: "<b>Dịch câu:</b> Cách nhanh nhất để đến bờ biển là <b>đi thẳng về hướng</b> đường cao tốc.<br><b>Giải thích:</b> 'make for' (đi về hướng)." },
-        { id:32, type: "gap_fill_text", questionHTML: "32. Don't worry if you're behind; you can <input type=\"text\" class=\"gap-fill-input\" data-id=\"32\" placeholder=\"...\"> the others later.", correctAnswers: ["catch up with"], explanationHTML: "<b>Dịch câu:</b> Đừng lo lắng nếu bạn bị tụt lại phía sau; bạn có thể <b>bắt kịp</b> những người khác sau.<br><b>Giải thích:</b> 'catch up with' (bắt kịp ai)." }
+        { id:17, type: "gap_fill_text", questionHTML: "<b>II. Fill in the blanks.</b><br>17. We booked our train {{blank:b1}} online three days before departure.", blanks: [{blankId: 'b1', correctAnswers: ["tickets"]}], explanationHTML: "<b>Dịch câu:</b> Chúng tôi đã đặt <b>vé</b> tàu trực tuyến ba ngày trước khi khởi hành.<br><b>Giải thích:</b> Cần danh từ chỉ vé tàu. 'train tickets' (vé tàu)." },
+        { id:18, type: "gap_fill_text", questionHTML: "18. The bus {{blank:b1}} was more expensive than I expected.", blanks: [{blankId: 'b1', correctAnswers: ["fare"]}], explanationHTML: "<b>Dịch câu:</b> <b>Giá vé</b> xe buýt đắt hơn tôi mong đợi.<br><b>Giải thích:</b> 'bus fare' (giá vé xe buýt)." },
+        { id:19, type: "gap_fill_text", questionHTML: "19. The museum charges a small entrance {{blank:b1}}.", blanks: [{blankId: 'b1', correctAnswers: ["fee"]}], explanationHTML: "<b>Dịch câu:</b> Bảo tàng thu một khoản <b>phí</b> vào cửa nhỏ.<br><b>Giải thích:</b> 'entrance fee' (phí vào cửa)." },
+        { id:20, type: "gap_fill_text", questionHTML: "20. From the top of the tower, we had a spectacular {{blank:b1}} of the city.", blanks: [{blankId: 'b1', correctAnswers: ["view"]}], explanationHTML: "<b>Dịch câu:</b> Từ đỉnh tháp, chúng tôi có <b>khung cảnh</b> tuyệt đẹp của thành phố.<br><b>Giải thích:</b> 'have a view of' (có tầm nhìn, khung cảnh về phía)." },
+        { id:21, type: "gap_fill_text", questionHTML: "21. The ancient castle is one of the main {{blank:b1}} in the region.", blanks: [{blankId: 'b1', correctAnswers: ["sights"]}], explanationHTML: "<b>Dịch câu:</b> Lâu đài cổ là một trong những <b>thắng cảnh</b> chính trong vùng.<br><b>Giải thích:</b> 'sights' (danh lam thắng cảnh). Nằm sau 'one of the main...' nên cần danh từ số nhiều." },
+        { id:22, type: "gap_fill_text", questionHTML: "22. The road runs along the {{blank:b1}} of the forest.", blanks: [{blankId: 'b1', correctAnswers: ["edge"]}], explanationHTML: "<b>Dịch câu:</b> Con đường chạy dọc theo <b>rìa/mép</b> của khu rừng.<br><b>Giải thích:</b> 'edge of the forest' (bìa rừng, mép rừng)." },
+        { id:23, type: "gap_fill_text", questionHTML: "23. We crossed the national {{blank:b1}} at 8 p.m.", blanks: [{blankId: 'b1', correctAnswers: ["border"]}], explanationHTML: "<b>Dịch câu:</b> Chúng tôi đã vượt qua <b>biên giới</b> quốc gia lúc 8 giờ tối.<br><b>Giải thích:</b> 'national border' (biên giới quốc gia)." },
+        { id:24, type: "gap_fill_text", questionHTML: "24. The white {{blank:b1}} in the middle of the road must not be crossed.", blanks: [{blankId: 'b1', correctAnswers: ["line"]}], explanationHTML: "<b>Dịch câu:</b> Không được đè vạch kẻ <b>đường</b> màu trắng ở giữa đường.<br><b>Giải thích:</b> 'white line' (vạch kẻ màu trắng)." },
+        { id:25, type: "gap_fill_text", questionHTML: "25. Please {{blank:b1}} at the hotel before going sightseeing.", blanks: [{blankId: 'b1', correctAnswers: ["check in", "check-in"]}], explanationHTML: "<b>Dịch câu:</b> Vui lòng <b>nhận phòng</b> tại khách sạn trước khi đi ngắm cảnh.<br><b>Giải thích:</b> 'check in' (làm thủ tục nhận phòng)." },
+        { id:26, type: "gap_fill_text", questionHTML: "26. What time do we need to {{blank:b1}} of the hotel tomorrow?", blanks: [{blankId: 'b1', correctAnswers: ["check out", "check-out"]}], explanationHTML: "<b>Dịch câu:</b> Ngày mai chúng ta cần <b>trả phòng</b> khách sạn lúc mấy giờ?<br><b>Giải thích:</b> 'check out of' (làm thủ tục trả phòng)." },
+        { id:27, type: "gap_fill_text", questionHTML: "27. I'll {{blank:b1}} at the airport at 6 a.m. (điền cả cụm)", blanks: [{blankId: 'b1', correctAnswers: ["pick you up", "pick up"]}], explanationHTML: "<b>Dịch câu:</b> Tôi sẽ <b>đón</b> bạn ở sân bay lúc 6 giờ sáng.<br><b>Giải thích:</b> Phrasal verb 'pick sb up' (đón ai đó)." },
+        { id:28, type: "gap_fill_text", questionHTML: "28. The driver {{blank:b1}} to let us out near the museum.", blanks: [{blankId: 'b1', correctAnswers: ["pulled in", "stopped", "pulled over"]}], explanationHTML: "<b>Dịch câu:</b> Người lái xe đã <b>tấp vào/dừng lại</b> để cho chúng tôi xuống gần bảo tàng.<br><b>Giải thích:</b> 'pull in' / 'pull over' / 'stop' đều có nghĩa là tấp xe vào lề, dừng xe lại." },
+        { id:29, type: "gap_fill_text", questionHTML: "29. We need to {{blank:b1}} now; the tour bus leaves in ten minutes.", blanks: [{blankId: 'b1', correctAnswers: ["set off"]}], explanationHTML: "<b>Dịch câu:</b> Chúng ta cần <b>khởi hành</b> ngay bây giờ; xe buýt du lịch sẽ rời đi sau mười phút nữa.<br><b>Giải thích:</b> 'set off' (khởi hành)." },
+        { id:30, type: "gap_fill_text", questionHTML: "30. After getting lost, we finally {{blank:b1}} to the main road.", blanks: [{blankId: 'b1', correctAnswers: ["got back", "made it back"]}], explanationHTML: "<b>Dịch câu:</b> Sau khi bị lạc, cuối cùng chúng tôi cũng <b>quay lại</b> được con đường chính.<br><b>Giải thích:</b> 'get back to' hoặc 'make it back to' (quay trở lại)." },
+        { id:31, type: "gap_fill_text", questionHTML: "31. The fastest way to reach the coast is to {{blank:b1}} the motorway.", blanks: [{blankId: 'b1', correctAnswers: ["make for"]}], explanationHTML: "<b>Dịch câu:</b> Cách nhanh nhất để đến bờ biển là <b>đi thẳng về hướng</b> đường cao tốc.<br><b>Giải thích:</b> 'make for' (đi về hướng)." },
+        { id:32, type: "gap_fill_text", questionHTML: "32. Don't worry if you're behind; you can {{blank:b1}} the others later.", blanks: [{blankId: 'b1', correctAnswers: ["catch up with"]}], explanationHTML: "<b>Dịch câu:</b> Đừng lo lắng nếu bạn bị tụt lại phía sau; bạn có thể <b>bắt kịp</b> những người khác sau.<br><b>Giải thích:</b> 'catch up with' (bắt kịp ai)." }
     ];
-
-    let userState = {};
-    let studentName = "";
-    let studentScore = 0;
-    
-    quizData.forEach(q => {
-        userState[q.id] = { answer: null, checked: false, isCorrect: null };
-    });
-
-    const startBtn = document.getElementById('start-btn');
-    const nameInput = document.getElementById('student-name-input');
-    startBtn.addEventListener('click', () => {
-        const n = nameInput.value.trim();
-        if(!n) {
-            alert("Vui lòng nhập tên học sinh trước khi bắt đầu bài làm!");
-            return;
-        }
-        studentName = n;
-        document.getElementById('display-name').textContent = studentName;
-        document.getElementById('start-screen').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        initAudio();
-        renderQuiz();
-    });
-
-    function updateProgress() {
-        const total = quizData.length;
-        let answered = 0;
-        quizData.forEach(q => {
-            if (userState[q.id].answer !== null && userState[q.id].answer !== '') answered++;
-        });
-        document.getElementById('progress-bar').style.width = (answered/total*100) + '%';
-        document.getElementById('progress-text').textContent = answered + '/' + total;
         
-        const allChecked = quizData.every(q => userState[q.id].checked);
-        const submitBtn = document.getElementById('submit-btn');
-        if (answered > 0) submitBtn.disabled = false;
-        if (allChecked) submitBtn.disabled = true;
-    }
-
-    function renderQuiz() {
-        const container = document.getElementById('quiz-container');
-        container.innerHTML = '';
+        let state = {};
         
-        quizData.forEach(q => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.id = 'card-' + q.id;
-            
-            let content = '<div class="question-text">' + q.questionHTML + '</div>';
-            
-            if (q.type === 'multiple_choice') {
-                content += '<div class="options-list" id="options-' + q.id + '">';
-                q.options.forEach(opt => {
-                    content += '<div class="option" data-qid="' + q.id + '" data-label="' + opt.label + '">' + opt.html + '</div>';
-                });
-                content += '</div>';
-            }
-            
-            content += '<button class="check-btn" id="check-btn-' + q.id + '" disabled>Kiểm tra</button>';
-            content += '<div class="explanation" id="exp-' + q.id + '">' + q.explanationHTML + '</div>';
-            
-            card.innerHTML = content;
-            container.appendChild(card);
-            
-            if (q.type === 'multiple_choice') {
-                const opts = card.querySelectorAll('.option');
-                opts.forEach(opt => {
-                    opt.addEventListener('click', function() {
-                        if (userState[q.id].checked) return;
-                        opts.forEach(o => o.classList.remove('pending'));
-                        this.classList.add('pending');
-                        userState[q.id].answer = this.getAttribute('data-label');
-                        playSelectSound();
-                        document.getElementById('check-btn-' + q.id).disabled = false;
-                        updateProgress();
-                    });
-                });
-            } else if (q.type === 'gap_fill_text') {
-                const input = card.querySelector('.gap-fill-input');
-                input.addEventListener('change', function() {
-                    if (userState[q.id].checked) return;
-                    if(this.value.trim() !== '') playSelectSound();
-                    userState[q.id].answer = this.value;
-                    document.getElementById('check-btn-' + q.id).disabled = this.value.trim() === '';
-                    updateProgress();
-                });
-                input.addEventListener('input', function() {
-                     if (userState[q.id].checked) return;
-                     userState[q.id].answer = this.value;
-                     document.getElementById('check-btn-' + q.id).disabled = this.value.trim() === '';
-                     updateProgress();
-                });
-            }
-            
-            document.getElementById('check-btn-' + q.id).addEventListener('click', function() {
-                checkQuestion(q.id);
-            });
-        });
-    }
-
-    function checkQuestion(id) {
-        if (userState[id].checked) return;
-        const q = quizData.find(x => x.id === id);
-        let isCorrect = false;
-        
-        if (q.type === 'multiple_choice') {
-            const correctOpt = q.options.find(o => o.isCorrect).label;
-            isCorrect = (userState[id].answer === correctOpt);
-            userState[id].isCorrect = isCorrect;
-            
-            const opts = document.querySelectorAll('#options-' + id + ' .option');
-            opts.forEach(o => {
-                o.classList.remove('pending');
-                const lbl = o.getAttribute('data-label');
-                if (lbl === correctOpt) o.classList.add('correct');
-                else if (lbl === userState[id].answer && !isCorrect) o.classList.add('wrong');
-            });
-        } else if (q.type === 'gap_fill_text') {
-            const val = normalizeAnswer(userState[id].answer);
-            isCorrect = q.correctAnswers.some(ans => normalizeAnswer(ans) === val);
-            userState[id].isCorrect = isCorrect;
-            
-            const input = document.querySelector('#card-' + id + ' .gap-fill-input');
-            input.classList.remove('pending');
-            if (isCorrect) input.classList.add('correct');
-            else {
-                input.classList.add('wrong');
-                const span = document.createElement('span');
-                span.style.color = 'var(--color-correct)';
-                span.style.fontWeight = 'bold';
-                span.style.marginLeft = '10px';
-                span.textContent = '(' + q.correctAnswers[0] + ')';
-                input.parentNode.insertBefore(span, input.nextSibling);
-            }
-            input.readOnly = true;
-        }
-        
-        userState[id].checked = true;
-        document.getElementById('check-btn-' + id).disabled = true;
-        document.getElementById('exp-' + id).style.display = 'block';
-        
-        if (isCorrect) playCorrectSound();
-        else playWrongSound();
-    }
-
-    document.getElementById('submit-btn').addEventListener('click', async function() {
-        this.disabled = true;
-        playSubmitSound();
-        let totalGradable = quizData.length;
-        let correctCount = 0;
-        let wrongList = [];
-        
-        quizData.forEach(q => {
-            if (!userState[q.id].checked) {
-                if (userState[q.id].answer === null || userState[q.id].answer.trim() === '') {
-                     userState[q.id].isCorrect = false;
-                     userState[q.id].checked = true;
-                } else {
-                     checkQuestion(q.id);
-                }
-            }
-            
-            if (userState[q.id].isCorrect) {
-                correctCount++;
-            } else {
-                let stuAns = userState[q.id].answer || '(Trống)';
-                let corAns = q.type==='multiple_choice' ? q.options.find(o=>o.isCorrect).label : q.correctAnswers[0];
-                wrongList.push('Câu ' + q.id + ': Học sinh chọn/điền ' + stuAns + ' (sai), đáp án đúng là ' + corAns);
+        function init() {
+            const container = document.getElementById('questionsContainer');
+            quizData.forEach((q, index) => {
+                state[q.id] = { checked: false, isCorrect: false, value: null };
                 
-                let errorHtml = '<div class="card">';
-                errorHtml += '<div class="question-text">' + q.questionHTML + '</div>';
-                if(q.type === 'multiple_choice') {
-                    q.options.forEach(opt => {
-                        let style = '';
-                        if(opt.isCorrect) style='color:var(--color-correct);font-weight:bold;';
-                        else if(opt.label === userState[q.id].answer) style='color:var(--color-wrong);text-decoration:line-through;';
-                        errorHtml += '<div style="padding:10px; border:1px solid #ddd; margin-bottom:5px; border-radius:5px; ' + style + '">' + opt.html + '</div>';
-                    });
-                } else {
-                    errorHtml += '<div style="padding:10px; border:1px solid var(--color-wrong); color:var(--color-wrong); text-decoration:line-through; margin-bottom:5px;">' + escapeHTML(userState[q.id].answer || '(Trống)') + '</div>';
-                    errorHtml += '<div style="padding:10px; border:1px solid var(--color-correct); color:var(--color-correct); font-weight:bold;">' + escapeHTML(q.correctAnswers[0]) + '</div>';
+                let block = document.createElement('div');
+                block.className = 'question-block';
+                block.id = 'q-block-' + q.id;
+                
+                let qText = q.questionHTML || q.question;
+                if (q.type === 'sentence_rewrite' && q.originalSentenceHTML) {
+                    // If questionHTML starts with a section title, put it before the original sentence
+                    let titleMatch = qText.match(/^(<b>.*?<\/b>\s*<br\s*\/?>\s*)/i);
+                    if (titleMatch) {
+                        qText = titleMatch[1] + q.originalSentenceHTML + '<br>' + qText.substring(titleMatch[1].length);
+                    } else {
+                        qText = q.originalSentenceHTML + '<br>' + qText;
+                    }
                 }
-                errorHtml += '<div class="explanation" style="display:block">' + q.explanationHTML + '</div>';
-                errorHtml += '</div>';
-                document.getElementById('error-list').innerHTML += errorHtml;
-            }
-        });
-        
-        studentScore = correctCount;
-        alert('Nộp bài thành công! Điểm của bạn: ' + correctCount + '/' + totalGradable);
-        
-        if (wrongList.length > 0) {
-            document.getElementById('error-list-container').style.display = 'block';
-            document.getElementById('error-list-container').scrollIntoView({behavior: 'smooth'});
-        } else {
-            document.getElementById('error-list').innerHTML = '<h3 style="color:var(--color-correct);text-align:center;">Chúc mừng! Bạn đã trả lời đúng tất cả các câu hỏi!</h3>';
-            document.getElementById('error-list-container').style.display = 'block';
-            playCorrectSound();
+                
+                // Wrap instruction in a nice box if it exists
+                if (qText.startsWith('<b>') && qText.match(/^<b>(.*?)<\/b>\s*<br\s*\/?>\s*/i)) {
+                    qText = qText.replace(/^<b>(.*?)<\/b>\s*<br\s*\/?>\s*/i, '<div class="instruction-box">$1</div>');
+                }
+                
+                if (q.type === 'gap_fill_text') {
+                    if (q.blanks) {
+                        q.blanks.forEach(b => {
+                            let blankStr = '{{blank:' + b.blankId + '}}';
+                            let inpStr = '<input type="text" id="input-' + q.id + '-' + b.blankId + '" class="gap-fill-input" autocomplete="off">';
+                            qText = qText.replace(blankStr, inpStr);
+                        });
+                    }
+                }
+                
+                let html = '<div class="question-text">' + qText + '</div>';
+                
+                if (q.type === 'multiple_choice' || q.type === 'mcq') {
+                    html += '<div class="options">';
+                    q.options.forEach((opt, index) => {
+                        let optText = opt.text || opt.html || '';
+                        let label = opt.label || String.fromCharCode(65 + index);
+                        html += '<div class="option" data-index="' + index + '" onclick="selectOption(\'' + q.id + '\', ' + index + ')">';
+                        html += '<div class="radio-circle"></div>';
+                        html += '<b>' + label + '.</b> ' + optText.replace(/^[A-D]\.\s*/, '');
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                }
+                else if (q.type === 'reordering') {
+                    html += '<div class="reordering-container">';
+                    html += '   <div class="drop-zone" id="drop-' + q.id + '"></div>';
+                    html += '   <div class="word-bank" id="bank-' + q.id + '">';
+                    if (q.words) {
+                        let shuffledWords = [...q.words].sort(() => Math.random() - 0.5);
+                        shuffledWords.forEach(w => {
+                            html += '<span class="word-chip" id="chip-' + q.id + '-' + w.tokenId + '" data-token="' + w.tokenId + '" onclick="moveChip(\'' + q.id + '\', \'' + w.tokenId + '\')">' + w.text + '</span>';
+                        });
+                    }
+                    html += '</div></div>';
+                }
+                else if (q.type === 'sentence_rewrite') {
+                    html += '<textarea class="rewrite-input" id="input-' + q.id + '" placeholder="Nhập câu trả lời của bạn..."></textarea>';
+                }
+                
+                html += '<button class="check-btn" id="check-btn-' + q.id + '" onclick="checkQuestion(\'' + q.id + '\')">Kiểm tra</button>';
+                html += '<div class="explanation" id="expl-' + q.id + '"></div>';
+                
+                block.innerHTML = html;
+                container.appendChild(block);
+            });
         }
         
-        const formData = new URLSearchParams();
-        formData.append('entry.1861648410', studentName);
-        formData.append('entry.1691800437', correctCount + '/' + totalGradable);
-        formData.append('entry.639295732', wrongList.join('\n'));
-        formData.append('entry.370465671', 'U1-U2 Đề 2');
+        function selectOption(qid, index) {
+            if (state[qid].checked) return;
+            const q = quizData.find(x => x.id.toString() === qid.toString());
+            const options = document.querySelectorAll('#q-block-' + qid + ' .option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[index].classList.add('selected');
+            state[qid].value = q.options[index].label || String.fromCharCode(65 + index);
+            updateProgress();
+        }
+
+        function startTest() {
+            const nameInput = document.getElementById('studentName').value.trim();
+            if (!nameInput) {
+                alert('Vui lòng nhập họ và tên của bạn!');
+                document.getElementById('studentName').focus();
+                return;
+            }
+            document.getElementById('startScreen').classList.remove('active');
+            document.getElementById('testScreen').classList.add('active');
+            window.scrollTo(0, 0);
+        }
         
-        try {
-            await fetch('https://docs.google.com/forms/d/e/1FAIpQLSfZCAK2lpNE8O8Ieqwc3SI1ubr6HZDvGZR91AsSpUk8kEBqaA/formResponse', {
+        function moveChip(qid, tokenId) {
+            if (state[qid].checked) return;
+            const chip = document.getElementById('chip-' + qid + '-' + tokenId);
+            const bank = document.getElementById('bank-' + qid);
+            const drop = document.getElementById('drop-' + qid);
+            
+            if (chip.parentElement === bank) {
+                drop.appendChild(chip);
+            } else {
+                bank.appendChild(chip);
+            }
+        }
+        
+        function checkQuestion(qid) {
+            if (state[qid].checked) return;
+            const q = quizData.find(x => x.id.toString() === qid.toString());
+            if (!q) return;
+            
+            // Validate answered
+            if (q.type === 'multiple_choice' || q.type === 'mcq') {
+                let val = state[qid].value;
+                if (!val) { alert("Vui lòng chọn một đáp án!"); return; }
+            } else if (q.type === 'gap_fill_text') {
+                let allFilled = true;
+                if (q.blanks) {
+                    q.blanks.forEach(b => {
+                        const el = document.getElementById('input-' + qid + '-' + b.blankId);
+                        if (!el || !el.value.trim()) allFilled = false;
+                    });
+                }
+                if (!allFilled) { alert("Vui lòng điền vào tất cả chỗ trống!"); return; }
+            } else if (q.type === 'reordering') {
+                const bank = document.getElementById('bank-' + qid);
+                if (bank && bank.children.length > 0) { alert("Vui lòng ghép tất cả các từ!"); return; }
+            } else if (q.type === 'sentence_rewrite') {
+                const el = document.getElementById('input-' + qid);
+                if (!el || !el.value.trim()) { alert("Vui lòng nhập câu trả lời!"); return; }
+            }
+            
+            // Check logic
+            state[qid].checked = true;
+            document.getElementById('check-btn-' + qid).disabled = true;
+            const expl = document.getElementById('expl-' + qid);
+            expl.innerHTML = q.explanationHTML || q.explanation || '';
+            expl.style.display = 'block';
+            
+            let isCorrect = false;
+            let errorDetails = "";
+            
+            if (q.type === 'multiple_choice' || q.type === 'mcq') {
+                const selectedVal = state[qid].value;
+                const correctOptIndex = q.options.findIndex(o => o.isCorrect);
+                const correctOptLabel = q.options[correctOptIndex].label || String.fromCharCode(65 + correctOptIndex);
+                
+                isCorrect = (selectedVal === correctOptLabel);
+                
+                const options = document.querySelectorAll('#q-block-' + qid + ' .option');
+                options.forEach(opt => opt.style.pointerEvents = 'none');
+                
+                const selectedIndex = q.options.findIndex((o, i) => (o.label || String.fromCharCode(65 + i)) === selectedVal);
+                
+                if (isCorrect) {
+                    if(options[selectedIndex]) options[selectedIndex].classList.add('correct-opt');
+                } else {
+                    if(options[selectedIndex]) options[selectedIndex].classList.add('wrong-opt');
+                    if(options[correctOptIndex]) options[correctOptIndex].classList.add('correct-opt');
+                    errorDetails = 'Câu ' + qid + ': Học sinh chọn ' + selectedVal + ' (sai), đáp án đúng là ' + correctOptLabel;
+                }
+            } 
+            else if (q.type === 'gap_fill_text') {
+                let allCorrect = true;
+                let userAnswersArr = [];
+                let correctAnswersArr = [];
+                
+                if (q.blanks) {
+                    q.blanks.forEach(b => {
+                        const input = document.getElementById('input-' + qid + '-' + b.blankId);
+                        const val = input.value.trim().toLowerCase();
+                        input.disabled = true;
+                        
+                        const isAnsCorrect = b.correctAnswers.some(ans => ans.toLowerCase() === val);
+                        if (isAnsCorrect) {
+                            input.style.backgroundColor = '#eafaf1';
+                            input.style.borderColor = '#2ecc71';
+                        } else {
+                            allCorrect = false;
+                            input.style.backgroundColor = '#fdedec';
+                            input.style.borderColor = '#e74c3c';
+                        }
+                        userAnswersArr.push(input.value.trim());
+                        correctAnswersArr.push(b.correctAnswers.join(' / '));
+                    });
+                }
+                
+                isCorrect = allCorrect;
+                if (!isCorrect) {
+                    errorDetails = 'Câu ' + qid + ': Điền sai. Đáp án đúng: ' + correctAnswersArr.join(', ');
+                }
+                let ansHtml = '<div style="margin-top:10px; padding:10px; background:#f8f9fa; border-left:4px solid #2ecc71;"><b>Đáp án đúng:</b><br>' + correctAnswersArr.map((ans, i) => 'Ô ' + (i+1) + ': <b>' + ans + '</b>').join('<br>') + '</div>';
+                expl.innerHTML = ansHtml + expl.innerHTML;
+            }
+            else if (q.type === 'reordering') {
+                const drop = document.getElementById('drop-' + qid);
+                const currentOrder = Array.from(drop.children).map(c => c.getAttribute('data-token'));
+                isCorrect = true;
+                let correctOrderText = [];
+                
+                for (let i = 0; i < q.correctOrder.length; i++) {
+                    const expectedToken = q.correctOrder[i];
+                    const expectedWord = q.words.find(w => w.tokenId === expectedToken).text;
+                    correctOrderText.push(expectedWord);
+                    
+                    if (currentOrder[i] !== expectedToken) {
+                        isCorrect = false;
+                    }
+                }
+                
+                Array.from(drop.children).forEach(chip => {
+                    chip.style.pointerEvents = 'none';
+                    if (isCorrect) chip.classList.add('correct');
+                    else chip.classList.add('wrong');
+                });
+                
+                if (!isCorrect) {
+                    let ansDiv = document.createElement('div');
+                    ansDiv.style.marginTop = '10px';
+                    ansDiv.innerHTML = '<b>Đáp án đúng:</b><br><div class="drop-zone" style="background:#eafaf1;border-color:#2ecc71;">' + 
+                        correctOrderText.map(t => '<span class="word-chip correct" style="pointer-events:none;">' + t + '</span>').join('') + 
+                        '</div>';
+                    drop.parentElement.appendChild(ansDiv);
+                    errorDetails = 'Câu ghép từ ' + qid + ' sai. Thứ tự đúng: ' + correctOrderText.join(' ');
+                }
+            }
+            else if (q.type === 'sentence_rewrite') {
+                const input = document.getElementById('input-' + qid);
+                const val = input.value.trim().toLowerCase();
+                input.disabled = true;
+                
+                const stripHtml = s => s.replace(/<[^>]*>?/gm, '');
+                const normalize = s => stripHtml(s).replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim();
+                const normVal = normalize(val);
+                
+                let ansArr = q.correctAnswers || q.sampleAnswers || [];
+                let qHtml = q.questionHTML || '';
+                let parts = qHtml.split(/_+|\.{3,}/);
+                let exactMissingPart = '';
+                
+                isCorrect = ansArr.some(ans => {
+                    let normAns = normalize(ans.toLowerCase());
+                    if (normAns === normVal) return true;
+                    
+                    if (parts.length >= 2) {
+                        let prefix = normalize(parts[0].replace(/^(->|\?|→)\s*/, '').toLowerCase());
+                        let suffix = normalize(parts[parts.length - 1].toLowerCase());
+                        
+                        let partialAns = normAns;
+                        // Use regex to strip prefix (with optional trailing space)
+                        if (prefix) {
+                            let prefixEsc = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                            partialAns = partialAns.replace(new RegExp('^' + prefixEsc + '\\s*'), '').trim();
+                        }
+                        // Use regex to strip suffix (with optional leading space)
+                        if (suffix) {
+                            let suffixEsc = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                            partialAns = partialAns.replace(new RegExp('\\s*' + suffixEsc + '$'), '').trim();
+                        }
+                        
+                        exactMissingPart = partialAns;
+                        if (partialAns && partialAns === normVal) return true;
+                    }
+                    return false;
+                });
+                
+                let correctDisplay = ansArr[0] || '';
+                
+                if (isCorrect) {
+                    input.style.backgroundColor = '#eafaf1';
+                    input.style.borderColor = '#2ecc71';
+                } else {
+                    input.style.backgroundColor = '#fdedec';
+                    input.style.borderColor = '#e74c3c';
+                    errorDetails = 'Câu viết lại ' + qid + ' sai. Đáp án mẫu:<br><b>' + correctDisplay + '</b>' + (exactMissingPart ? '<br><i>(Hoặc chỉ cần điền: <b>' + exactMissingPart + '</b>)</i>' : '');
+                }
+                
+                let firstMissingPart = '';
+                if (parts.length >= 2 && correctDisplay) {
+                    let prefix = normalize(parts[0].replace(/^(->|\?|→)\s*/, '').toLowerCase());
+                    let suffix = normalize(parts[parts.length - 1].toLowerCase());
+                    let partialAns = normalize(correctDisplay.toLowerCase());
+                    if (prefix) {
+                        let prefixEsc = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                        partialAns = partialAns.replace(new RegExp('^' + prefixEsc + '\\s*'), '').trim();
+                    }
+                    if (suffix) {
+                        let suffixEsc = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                        partialAns = partialAns.replace(new RegExp('\\s*' + suffixEsc + '$'), '').trim();
+                    }
+                    if (partialAns) firstMissingPart = partialAns;
+                }
+                
+                let ansHtml = '<div style="margin-top:10px; padding:10px; background:#f8f9fa; border-left:4px solid #2ecc71;"><b>Đáp án đúng:</b><br>' + correctDisplay + (firstMissingPart ? '<br><i>(Hoặc chỉ cần điền: <b>' + firstMissingPart + '</b>)</i>' : '') + '</div>';
+                expl.innerHTML = ansHtml + expl.innerHTML;
+            }
+            
+            state[qid].isCorrect = isCorrect;
+            state[qid].errorDetails = errorDetails;
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            const total = quizData.length;
+            const checkedCount = Object.values(state).filter(s => s.checked).length;
+            const pct = (checkedCount / total) * 100;
+            document.getElementById('progressFill').style.width = pct + '%';
+        }
+        
+        function confirmSubmit() {
+            const total = quizData.length;
+            const checkedCount = Object.values(state).filter(s => s.checked).length;
+            if (checkedCount < total) {
+                if (!confirm(`Bạn mới kiểm tra ${checkedCount}/${total} câu. Bạn có chắc chắn muốn nộp bài?`)) {
+                    return;
+                }
+            }
+            submitTest();
+        }
+        
+        function submitTest() {
+            const studentName = document.getElementById('studentName').value.trim();
+            const total = quizData.length;
+            const correctCount = Object.values(state).filter(s => s.isCorrect).length;
+            const score = (correctCount / total) * 10;
+            
+            const errors = Object.values(state)
+                .filter(s => s.checked && !s.isCorrect && s.errorDetails)
+                .map(s => s.errorDetails);
+            const errorReport = errors.length > 0 ? errors.join('\n') : "Không có lỗi sai";
+            
+            document.getElementById('testScreen').classList.remove('active');
+            document.getElementById('resultScreen').classList.add('active');
+            
+            document.getElementById('scoreDisplay').innerText = score.toFixed(1) + ' / 10';
+            
+            let feedback = '';
+            if (score >= 9) feedback = 'Xuất sắc! Bạn nắm bài rất vững.';
+            else if (score >= 7) feedback = 'Khá tốt! Hãy cố gắng hơn một chút nhé.';
+            else if (score >= 5) feedback = 'Đạt yêu cầu. Bạn cần ôn tập thêm.';
+            else feedback = 'Chưa đạt. Bạn cần xem lại kỹ bài học!';
+            document.getElementById('feedbackText').innerText = feedback;
+            
+            const detailsDiv = document.getElementById('resultDetails');
+            if (errors.length > 0) {
+                detailsDiv.innerHTML = '<h3>Chi tiết các câu sai:</h3>' + 
+                    errors.map(e => '<div class="error-item">' + e + '</div>').join('');
+            } else {
+                detailsDiv.innerHTML = '<h3 style="color:#2ecc71;">Chúc mừng bạn đã trả lời đúng tất cả các câu hỏi!</h3>';
+            }
+            
+            // Submit to Google Form
+            const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfZCAK2lpNE8O8Ieqwc3SI1ubr6HZDvGZR91AsSpUk8kEBqaA/formResponse';
+            const formData = new FormData();
+            formData.append('entry.1861648410', studentName);
+            formData.append('entry.1691800437', score.toFixed(2));
+            formData.append('entry.639295732', errorReport);
+            formData.append('entry.370465671', testName);
+            
+            fetch(formUrl, {
                 method: 'POST',
                 mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formData.toString()
+                body: formData
+            }).then(() => {
+                window.scrollTo(0, 0);
+            }).catch(err => {
+                alert('Có lỗi khi gửi kết quả. Vui lòng thử lại!');
+                console.error(err);
             });
-        } catch (e) {
-            console.error('Submit error:', e);
         }
-    });
-
-})();
-</script>
+        
+        init();
+    </script>
 </body>
 </html>
